@@ -2,7 +2,7 @@ import os
 from pyspark.sql import SparkSession
 
 # Ensure correct Python environment for PySpark
-os.environ['PYSPARK_PYTHON'] = 'C:\\Users\\admin\\AppData\\Local\\Programs\\Python\\Python39\\python.exe'
+os.environ['PYSPARK_PYTHON'] = r'C:\Users\admin\AppData\Local\Programs\Python\Python39\python.exe'
 
 def create_spark_session():
     """
