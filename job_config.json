@@ -13,14 +13,7 @@
                 "custom_tags": {
                     "ClusterType": "SingleNode"
                 }
-            },
-            "libraries": [
-                {
-                    "pypi": {
-                        "package": "pytest"
-                    }
-                }
-            ]
+            }
         }
     ]
 }
