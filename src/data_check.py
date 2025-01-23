@@ -1,35 +1,17 @@
-import os
-from pyspark.sql import SparkSession
-
-# Ensure correct Python environment for PySpark
-os.environ['SPARK_HOME'] = 'C:\\spark-3.5.4-bin-hadoop3'
-os.environ['PYSPARK_PYTHON'] = 'C:\\Users\\admin\\AppData\\Local\\Programs\\Python\\Python39\\python.exe'
-
-def create_spark_session():
-    """
-    Creates and returns a Spark session.
-    """
-    return SparkSession.builder \
-        .appName("PySpark Unit Testing") \
-        .master("local[*]") \
-        .getOrCreate()
-
 def get_count(df):
     """
     Returns the count of rows in the given DataFrame.
     """
     return df.count()
 
-if __name__ == "__main__":
-    # Create Spark session
-    spark = create_spark_session()
+def get_column_names(df):
+    """
+    Returns a list of column names in the given DataFrame.
+    """
+    return df.columns
 
-    # Sample DataFrame
-    data = [("John", 34), ("Doe", 25)]
-    df = spark.createDataFrame(data, ["name", "age"])
-
-    # Get the count and print it
-    print(f"Row count: {get_count(df)}")
-
-    # Stop Spark session
-    spark.stop()
+def filter_by_column_value(df, column_name, value):
+    """
+    Filters the DataFrame where the specified column matches the given value.
+    """
+    return df.filter(df[column_name] == value)
