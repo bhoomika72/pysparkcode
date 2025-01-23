@@ -1,4 +1,3 @@
-import pytest
 import sys
 import os
 
@@ -9,29 +8,11 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../')))
 os.environ['SPARK_HOME'] = 'C:\\spark-3.5.4-bin-hadoop3'
 os.environ['PYSPARK_PYTHON'] = 'C:\\Users\\admin\\AppData\\Local\\Programs\\Python\\Python39\\python.exe'
 
-# Import SparkSession
-from pyspark.sql import SparkSession
 from src.data_check import get_count, get_column_names, filter_by_column_value
-
-def test_spark_session_creation():
-    """
-    Smoke test to ensure the Spark session is created successfully.
-    """
-    spark = SparkSession.builder \
-        .appName("Smoke Test") \
-        .master("local[*]") \
-        .getOrCreate()
-
-    assert spark is not None
-    assert spark.version is not None
-    spark.stop()
 
 
 def test_csv_file_loading(spark):
-    """
-    Smoke test to ensure the CSV file is loaded successfully into a DataFrame.
-    """
-    # Replace with the correct path to your CSV file
+
     file_path = "C:\\Users\\admin\\OneDrive - TestPerform\\Desktop\\sample_data.csv"
     df = spark.read.csv(file_path, header=True, inferSchema=True)
 
@@ -40,10 +21,7 @@ def test_csv_file_loading(spark):
 
 
 def test_basic_get_count(spark):
-    """
-    Smoke test to verify the `get_count` function works with a small dataset.
-    """
-    # Create a small in-memory DataFrame
+
     data = [("Test", 1), ("Data", 2)]
     df = spark.createDataFrame(data, ["name", "value"])
 
@@ -54,10 +32,7 @@ def test_basic_get_count(spark):
 
 
 def test_basic_get_column_names(spark):
-    """
-    Smoke test to verify the `get_column_names` function works with a small dataset.
-    """
-    # Create a small in-memory DataFrame
+
     data = [("Test", 1), ("Data", 2)]
     df = spark.createDataFrame(data, ["name", "value"])
 
@@ -68,10 +43,7 @@ def test_basic_get_column_names(spark):
 
 
 def test_basic_filter_by_column_value(spark):
-    """
-    Smoke test to verify the `filter_by_column_value` function works with a small dataset.
-    """
-    # Create a small in-memory DataFrame
+
     data = [("Alice", "New York"), ("Bob", "Los Angeles"), ("Charlie", "New York")]
     df = spark.createDataFrame(data, ["name", "city"])
 
