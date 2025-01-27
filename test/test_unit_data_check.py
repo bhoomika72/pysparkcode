@@ -12,7 +12,7 @@ from src.data_check import get_count, get_column_names, filter_by_column_value
 
 
 def test_get_count(spark):
-    df = spark.read.csv("C:\\Users\\admin\\OneDrive - TestPerform\\Desktop\\cicd\\pyspark\\sample_data.csv", header=True, inferSchema=True)
+    df = spark.read.csv("C:\\Users\\admin\\OneDrive - TestPerform\\Desktop\\sample_data.csv", header=True, inferSchema=True)
     
     # Get the count
     result = get_count(df)
@@ -21,7 +21,7 @@ def test_get_count(spark):
     assert result == 20  # Replace with the actual row count of your test file
 
 def test_get_column_names(spark):
-    df = spark.read.csv("C:\\Users\\admin\\OneDrive - TestPerform\\Desktop\\cicd\\pyspark\\sample_data.csv", header=True, inferSchema=True)
+    df = spark.read.csv("C:\\Users\\admin\\OneDrive - TestPerform\\Desktop\\sample_data.csv", header=True, inferSchema=True)
     
     # Get column names
     result = get_column_names(df)
@@ -30,7 +30,7 @@ def test_get_column_names(spark):
     assert result == ["Name", "Age", "City"]
 
 def test_filter_by_column_value(spark):
-    df = spark.read.csv("C:\\Users\\admin\\OneDrive - TestPerform\\Desktop\\cicd\\pyspark\\sample_data.csv", header=True, inferSchema=True)
+    df = spark.read.csv("C:\\Users\\admin\\OneDrive - TestPerform\\Desktop\\sample_data.csv", header=True, inferSchema=True)
     
     filtered_df = filter_by_column_value(df, "city", "New York")
     
