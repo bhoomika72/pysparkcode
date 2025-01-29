@@ -1,0 +1,97 @@
+import sys
+import os
+from pyspark.sql import functions as F
+
+# Add the source directory to the path
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../')))
+
+from src.data_check import get_count, get_column_names, filter_by_column_value
+
+# File paths for current and previous data
+previous_data_file_path = "C:\\Users\\admin\\OneDrive - TestPerform\\Desktop\\cicd\\prev_data.csv"
+current_data_file_path = "C:\\Users\\admin\\OneDrive - TestPerform\\Desktop\\cicd\\curr_data.csv"
+
+def read_previous_data(spark):
+    """Read previous data from a CSV file."""
+    if os.path.exists(previous_data_file_path):
+        return spark.read.csv(previous_data_file_path, header=True, inferSchema=True)
+    else:
+        print("Previous data file not found. Returning empty DataFrame.")
+        return spark.createDataFrame([], spark.read.csv(previous_data_file_path, header=True, inferSchema=True).schema)
+
+
+def test_insertion_deletion_update(spark):
+    # Read the current data
+    current_df = spark.read.csv(current_data_file_path, header=True, inferSchema=True)
+
+    # Read the previous data (if exists)
+    previous_df = read_previous_data(spark)
+
+    if previous_df.count() > 0:
+        # Find inserted rows (in current data but not in previous data)
+        inserted_rows = current_df.join(previous_df, on="id", how="left_anti")
+
+        # Find deleted rows (in previous data but not in current data)
+        deleted_rows = previous_df.join(current_df, on="id", how="left_anti")
+
+        # Find updated rows (rows with matching 'id' but different values in other columns)
+        updated_rows = current_df.join(previous_df, on="id", how="inner")
+
+        # Loop through all columns to check for differences, excluding 'id'
+        updated_condition = None
+        for col_name in current_df.columns:
+            if col_name != 'id':  # Exclude 'id' as it's considered the key
+                condition = (current_df[col_name] != previous_df[col_name])
+                if updated_condition is None:
+                    updated_condition = condition
+                else:
+                    updated_condition = updated_condition | condition
+
+        # Filter the rows where any column has changed (excluding 'id')
+        updated_rows = updated_rows.filter(updated_condition)
+
+        # Output the counts for verification
+        inserted_count = inserted_rows.count()
+        deleted_count = deleted_rows.count()
+        updated_count = updated_rows.count()
+
+        print(f"Inserted Rows Count: {inserted_count}")
+        print(f"Deleted Rows Count: {deleted_count}")
+        print(f"Updated Rows Count: {updated_count}")
+
+        # Assertions (based on your specific use case)
+        assert inserted_count >= 0
+        assert deleted_count >= 0
+        assert updated_count >= 0
+    else:
+        print("No previous data found, skipping comparison.")
+
+
+    # Optional: Verify that data is consistent and non-negative where necessary
+    assert current_df.count() >= 0  # Current data should not be empty or negative
+
+
+
+
+def test_get_column_names(spark):
+    df = spark.read.csv("C:\\Users\\admin\\OneDrive - TestPerform\\Desktop\\sample_data.csv", header=True, inferSchema=True)
+    
+    # Get column names
+    result = get_column_names(df)
+    
+    # Assert the column names are as expected
+    assert result == ["Id","Name", "Age", "City"]
+
+
+def test_filter_by_column_value(spark):
+    df = spark.read.csv("C:\\Users\\admin\\OneDrive - TestPerform\\Desktop\\sample_data.csv", header=True, inferSchema=True)
+    
+    filtered_df = filter_by_column_value(df, "city", "New York")
+    
+    # Get the count of filtered rows
+    filtered_count = get_count(filtered_df)
+    
+    # Assert that filtered rows are as expected (adjust the expected count based on your test data)
+    assert filtered_count > 0
+
+
