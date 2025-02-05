@@ -26,3 +26,8 @@ def validate_column_types(df: DataFrame, expected_schema: dict) -> bool:
         if col not in actual_schema or actual_schema[col] != dtype:
             return False
     return True
+
+
+def test_print() -> None:
+    """Prints a test statement."""
+    print("This is a test print statement.")
