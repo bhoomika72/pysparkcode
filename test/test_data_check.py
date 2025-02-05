@@ -21,7 +21,6 @@ def read_previous_data(spark):
     if os.path.exists(previous_data_file_path):
         return spark.read.csv(previous_data_file_path, header=True, inferSchema=True)
     else:
-        print("Previous data file not found. Returning empty DataFrame.")
         return spark.createDataFrame([], spark.read.csv(current_data_file_path, header=True, inferSchema=True).schema)
 
 ### Unit Test Cases ###
@@ -45,7 +44,7 @@ def test_insertion_detection(spark):
     previous_df = read_previous_data(spark)
 
     if previous_df.count() == 0:
-        pytest.skip("Previous data file not found. Skipping insertion detection test.")
+        pytest.skip()
 
     inserted_rows = detect_inserted_rows(current_df, previous_df)
     inserted_count = inserted_rows.count()
@@ -58,7 +57,7 @@ def test_update_detection(spark):
     previous_df = read_previous_data(spark)
 
     if previous_df.count() == 0:
-        pytest.skip("Previous data file not found. Skipping update detection test.")
+        pytest.skip()
 
     updated_rows = detect_updated_rows(current_df, previous_df)
     updated_count = updated_rows.count()
@@ -119,7 +118,7 @@ def test_new_columns_detection(spark):
     if os.path.exists(previous_data_file_path):
         previous_df = spark.read.csv(previous_data_file_path, header=True, inferSchema=True)
     else:
-        print("Previous data file not found. Considering only current data.")
+        print()
         previous_df = spark.createDataFrame([], current_df.schema)
 
     new_columns = detect_new_columns(current_df, previous_df)
