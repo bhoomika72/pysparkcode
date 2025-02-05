@@ -42,7 +42,8 @@ def test_column_case_sensitivity(spark):
 @pytest.mark.smoke
 def test_reading_invalid_file(spark):
     invalid_file_path = "C:\\Users\\admin\\OneDrive - TestPerform\\Desktop\\cicd\\invalid.csv"
-    
-    spark.read.csv(invalid_file_path, header=True, inferSchema=True)
-    pytest.fail("Expected an error due to missing file, but none occurred.")
-    
+    try:
+        spark.read.csv(invalid_file_path, header=True, inferSchema=True)
+        pytest.fail("Expected an error due to missing file, but none occurred.")
+    except Exception as e:
+        assert "Path does not exist" in str(e)
