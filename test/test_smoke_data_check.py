@@ -37,7 +37,7 @@ def test_column_names_and_types(spark):
 def test_column_case_sensitivity(spark):
     df = spark.read.csv(current_data_file_path, header=True, inferSchema=True)
     columns = get_column_names(df)
-    assert "name" not in columns and "Name1" in columns
+    assert "name" not in columns and "Name" in columns
 
 @pytest.mark.smoke
 def test_reading_invalid_file(spark):
