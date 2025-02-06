@@ -31,3 +31,6 @@ def validate_column_types(df: DataFrame, expected_schema: dict) -> bool:
 def test_print() -> None:
     """Prints a test statement."""
     print("This is a test print statement.")
+
+def cicd_demo() -> None:
+    print("New code deployed using Jenkins pipeline")
